@@ -28,17 +28,27 @@ function validation() {
 }
 
 function addElement() {
-    const node = templateTodo.cloneNode(true);
+    const node = templateTodo.firstElementChild.cloneNode(true);
     node.querySelector('.item-name').textContent = input.value;
     node.querySelector('button').dataset.item = input.value;
+    node.querySelector('button').addEventListener('click', () => {
+        removeElement(node.querySelector('button').dataset.item)
+    })
     fragment.appendChild(node);
     content.appendChild(fragment)
 }
-
 
 //close alert div
 function closeAlert() {
     setTimeout(() => {
         document.querySelector('.alert').classList.add('d-none');
     }, 1000);
+}
+
+//remove element
+function removeElement(item) {
+    console.log(items);
+    const index = items.indexOf(item)
+    items.splice(index, 1)
+    console.log(items);
 }
