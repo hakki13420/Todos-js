@@ -1,4 +1,4 @@
-const items=[]
+let items=[]
 
 const templateTodo = document.querySelector('#todo-template').content;
 const content = document.querySelector('.content')
@@ -14,7 +14,8 @@ document.querySelector('form').addEventListener('submit', (e) => {
         
         if(index === -1) {
             items.push(input.value)
-            addElement();
+            storeElements();
+            displayElements();
         } else {
             document.querySelector('.alert').classList.remove('d-none');
             closeAlert();
@@ -27,10 +28,10 @@ function validation() {
     return reg.test(input.value.trim());
 }
 
-function addElement() {
+function addElement(input) {
     const node = templateTodo.firstElementChild.cloneNode(true);
-    node.querySelector('.item-name').textContent = input.value;
-    node.querySelector('button').dataset.item = input.value;
+    node.querySelector('.item-name').textContent = input;
+    node.querySelector('button').dataset.item = input;
     node.querySelector('button').addEventListener('click', () => {
         removeElement(node.querySelector('button').dataset.item)
     })
@@ -46,9 +47,32 @@ function closeAlert() {
 }
 
 //remove element
-function removeElement(item) {
-    console.log(items);
+function removeElement(item) {    
     const index = items.indexOf(item)
-    items.splice(index, 1)
-    console.log(items);
+    items.splice(index, 1);    
+    storeElements();
+    displayElements();
 }
+
+
+//display element from array
+function displayElements()
+{
+    content.textContent=""
+    items.forEach(el => addElement(el))
+}
+function storeElements() {
+    localStorage.setItem('items',JSON.stringify(items))
+}
+
+
+//auto run function
+(function () {
+    if (localStorage.getItem('items')) {        
+        items = JSON.parse(localStorage.getItem('items'))
+        console.log(items)
+        displayElements()
+    } else {
+        items=[]
+    }
+})()
